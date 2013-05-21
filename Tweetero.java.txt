@@ -1,0 +1,64 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package Funda.Tweet;
+
+import java.util.ArrayList;
+
+/**
+ *
+ * @author AlFoNsO
+ */
+public class Tweetero {
+    int numeroSeguidores;
+    int cantSigo;
+    int cantTweet;
+    String nombre;
+    String ubicacion;
+    String imagen;
+    String ip;
+    String color;
+    String usuario;
+    String password;
+    ArrayList<Tweetero> seguidores;
+    ConjuntoTweets misTweets;
+    String file;
+    ///Constructor
+    public Tweetero(int ns, int cs, int conjt, String n, String u, String ima,
+                    String i, String col, String us, String pass,
+                    ArrayList<Tweetero> seg, ConjuntoTweets ct, String f)
+    {
+        numeroSeguidores = ns;
+        cantSigo = cs;
+        cantTweet = conjt;
+        nombre = n;
+        ubicacion = u;
+        imagen = ima;
+        ip = i;
+        color=col;
+        usuario=us;
+        password=pass;
+        seguidores=seg;
+        misTweets=ct;
+        file = f;
+
+    }
+    ///Fin Constructor
+
+    public Tweetero LeerFile()
+    {
+        return null;
+    }
+
+    public Boolean GrabarFile()
+    {
+        return null;
+    }
+
+    public ConjuntoTweets LeerTweets()
+    {
+        return null;
+    }
+}

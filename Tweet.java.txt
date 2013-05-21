@@ -1,0 +1,41 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package Funda.Tweet;
+
+import java.util.Date;
+
+/**
+ *
+ * @author AlFoNsO
+ */
+public class Tweet {
+    String title;
+    String description;
+    String link;
+    String guid;
+    Date pubDate;
+
+    public Tweet(String t, String d, String l, String g, Date pd)
+    {
+        title = t;
+        description = d;
+        link = l;
+        guid = g;
+        pubDate = pd;
+    }
+    @Override
+    public String toString()
+    {
+        String algo = "<item> </br>";
+        algo += "<title>" + title + "</title> </br>";
+        algo += "<description>" + description + "</description></br>";
+        algo += "<link>" + link + "</link></br>";
+        algo += "<guid>" + guid + "</guid></br>";
+        algo += "<pubDate>" + pubDate.getDate() + "</pubDate></br>";
+        return algo;
+    }
+
+}

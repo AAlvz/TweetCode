@@ -1,0 +1,67 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package Funda.Tweet;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+/**
+ *
+ * @author AlFoNsO
+ */
+public class ConjuntoTweets {
+    ArrayList<Tweet> tweets;
+    String file;
+    String title;
+    String description;
+    String link;
+    Date lastBuildDate;
+    Date pubDate;
+    Integer ttl;
+
+    //metodos
+    //constructor
+    public ConjuntoTweets(ArrayList<Tweet> tw, String f, String t, String d, String l, Date lbd, Date pd, Integer tl)
+    {
+        tweets = tw;
+        file = f;
+        title = t;
+        description = d;
+        link = l;
+        lastBuildDate = lbd;
+        pubDate = pd;
+        ttl = tl;
+    }
+
+    public ArrayList<Tweet> leer()
+    {
+        return null;
+    }
+
+    public Boolean describir()
+    {
+        return true;
+    }
+
+    @Override
+    public String toString()
+    {
+        String algo = "<?xml version="+"1.0"+" encoding="+"UTF-8"+" ?> </br>";
+        algo += "<rss version="+"2.0"+"></br>";
+        algo += "<channel></br>";
+        algo += "<title>" + title + "</title> </br>";
+        algo += "<description>" + description + "</description></br>";
+        algo += "<link>" + link + "</link></br>";
+        algo += "<lastBuildDate>" + lastBuildDate.getDate() + "</lastBuildDate></br>";
+        algo += "<pubDate>" + pubDate.getDate() + "</pubDate></br>";
+        algo += "<ttl>" + ttl + "</ttl></br>";
+        for(Tweet t: tweets)
+            algo += t.toString();
+        algo += "</channel></rss>";
+
+        return algo;
+    }
+}

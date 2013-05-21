@@ -1,0 +1,246 @@
+package Funda.Tweet;
+
+import Funda.extras.NewClass;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author AlFoNsO
+ */
+public class BuscarTweeteros {
+    private ArrayList<Tweetero> tweeteros;
+    String busqueda;
+
+    public BuscarTweeteros(String busca)
+    {
+        busqueda = busca;
+    }
+
+    public ArrayList<String[]> Buscar()
+    {
+        try {
+            ArrayList<String[]> lista = new ArrayList<String[]>();
+            java.net.URLConnection connection2;
+            String aaa = NewClass.ipServidor;
+            connection2 = new java.net.URL("http://"+aaa+"/IPS/IPS.txt").openConnection();
+            BufferedReader b = new BufferedReader(new InputStreamReader(connection2.getInputStream()));
+            b.readLine();
+            String s;
+            while((s=b.readLine())!=null){
+                String ip =(s.split(",")[1]);
+                String nom =(s.split(",")[0]);
+                ArrayList<String> listaTxt = NewClass.getArchivoOnline("http://"+ip+"/appDis/"+nom+".txt");
+                String nick = listaTxt.get(4);
+                if(nick.startsWith(busqueda)){
+                    String[] stt = new String[]{nick,ip,nom};
+                    lista.add(stt);
+                }
+            }
+            b.close();
+            return lista;
+        }
+
+        catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public Boolean SeguirTweetero(String archivoTxt, String idTweetero)
+    {
+        try{
+        ArrayList<String> lista = NewClass.getArchivo(archivoTxt);
+        PrintWriter p = new PrintWriter(new FileWriter(archivoTxt));
+        p.println(lista.get(0));
+        p.println("" + (Integer.valueOf(lista.get(1))+1));
+        for(int x=2;x<lista.size();x++)
+            p.println(lista.get(x));
+        p.println(idTweetero);
+        p.close();
+        return true;
+        } catch(Exception e){return false;}
+    }
+
+     public Boolean DejarSeguirTweetero(String archivoTxt, String idTweetero)
+    {
+        try{
+        ArrayList<String> lista = NewClass.getArchivo(archivoTxt);
+        PrintWriter p = new PrintWriter(new FileWriter(archivoTxt));
+        p.println(lista.get(0));
+        p.println("" + (Integer.valueOf(lista.get(1))-1));
+        for(int x=2;x<lista.size();x++)
+            if(!lista.get(x).equals(idTweetero))
+                p.println(lista.get(x));
+        p.close();
+        return true;
+        } catch(Exception e){return false;}
+    }
+
+    /**
+     * @return the tweeteros
+     */
+    public ArrayList<Tweetero> getTweeteros() {
+        return tweeteros;
+    }
+
+    /**
+     * @param tweeteros the tweeteros to set
+     */
+    public void setTweeteros(ArrayList<Tweetero> tweeteros) {
+        this.tweeteros = tweeteros;
+    }
+
+     public String getUser(String nick) {
+        try {
+            busqueda= (nick);
+            ArrayList<String[]> buscar = Buscar();
+            for(String[] s : buscar){
+                String nickT = s[0];
+                String nombre = s[2];
+                if(nick.equals(nickT)){
+                    return nombre;
+                }
+            }
+            return "null";
+        } catch (Exception ex) {
+            return "null";
+        }
+    }
+
+     public String getNick(String user) {
+           try
+           {
+            ArrayList<String[]> lista = new ArrayList<String[]>();
+            java.net.URLConnection connection2;
+            connection2 = new java.net.URL("http://"+NewClass.ipServidor+"/IPS/IPS.txt").openConnection();
+            BufferedReader b = new BufferedReader(new InputStreamReader(connection2.getInputStream()));
+            b.readLine();
+            String s;
+            while((s=b.readLine())!=null){
+                String ip =(s.split(",")[1]);
+                String nom =(s.split(",")[0]);
+                ArrayList<String> listaTxt = NewClass.getArchivoOnline("http://"+ip+"/appDis/"+nom+".txt");
+                String nombre = listaTxt.get(3);
+                if(nombre.equals(user)){
+                    b.close();
+                    return listaTxt.get(4);
+                }
+            }
+            b.close();
+            return "pasdf";
+        }
+
+        catch (Exception ex) {
+            return null;
+        }
+    }
+
+     public ArrayList<Tweet> getComments(String link,String description,String tweetero)
+     {
+        try {
+            String r="";
+            ArrayList<String> local;
+            try { local = NewClass.getArchivo("C:/xampp/htdocs/appDis/TweetsAjenos/" + busqueda + ".txt"); }
+            catch(Exception e){local = NewClass.getArchivo("C:/xampp/htdocs/appDis/" + busqueda + ".txt"); }
+            ArrayList<String> localTweetero = NewClass.getArchivo("C:/xampp/htdocs/appDis/" + tweetero + ".txt");
+            ArrayList<Tweet> retorno = new ArrayList<Tweet>();
+            for (int x = 9; x < local.size(); x++) {
+                /**VALIDAR QUE TENGO SU AMIGO YO TWEETERO**/
+                if(localTweetero.contains(local.get(x))){
+                    r+="entro";
+                    try{
+                        Tweetero t = Tweetero.LeerFilePedorro("TweetsAjenos/" + local.get(x));
+                        for(Tweet tA : t.misTweets.tweets){
+                        r+=tA.link;
+                        if(tA.link.equals(link))
+                            retorno.add(tA);
+                    }
+                    } catch (Exception e)
+                    {
+                        Tweetero t = Tweetero.LeerFilePedorro(local.get(x));
+                        for(Tweet tA : t.misTweets.tweets){
+                        r+=tA.link;
+                        if(tA.link.equals(link))
+                            retorno.add(tA);
+                    }
+                   
+                }
+            }
+            }
+            return retorno;
+        } catch (Exception ex) {
+            System.out.println("ORTIZ EXCEPTION" + ex);
+            return null;
+        }
+     }
+
+
+    public String getIP(String nick) {
+        try {
+            busqueda=(nick);
+            ArrayList<String[]> buscar = Buscar();
+            for(String[] s : buscar){
+                String nickT = s[0];
+                String ip = s[1];
+                String nombre = s[2];
+                if(nick.equals(nickT)){
+                    return ip;
+                }
+            }
+            return "null";
+        } catch (Exception ex) {
+            return "null";
+        }
+    }
+
+    public String getIPNombre(String nombreU) {
+        try {
+            ArrayList<String[]> lista = new ArrayList<String[]>();
+            java.net.URLConnection connection2;
+            connection2 = new java.net.URL("http://"+NewClass.ipServidor+"/IPS/IPS.txt").openConnection();
+            BufferedReader b = new BufferedReader(new InputStreamReader(connection2.getInputStream()));
+            b.readLine();
+            String s;
+            while((s=b.readLine())!=null){
+                String ip =(s.split(",")[1]);
+                String nom =(s.split(",")[0]);
+                ArrayList<String> listaTxt = NewClass.getArchivoOnline("http://"+ip+"/appDis/"+nom+".txt");
+                String nick = listaTxt.get(3);
+                if(nick.equals(nombreU)){
+                    return ip;
+                }
+            }
+            b.close();
+            
+            return "null";
+        }
+
+        catch (Exception ex) {
+            return null;
+        }
+        
+    }
+
+    public String getImagen(String ip, String nombreU) {
+        try {
+            ArrayList<String[]> lista = new ArrayList<String[]>();
+            java.net.URLConnection connection2;
+            connection2 = new java.net.URL("http://"+ip+"/appDis/"+nombreU+".txt").openConnection();
+            BufferedReader b = new BufferedReader(new InputStreamReader(connection2.getInputStream()));
+            b.readLine(); b.readLine(); b.readLine(); b.readLine(); b.readLine();b.readLine();
+            String imagen = b.readLine();
+            return imagen;
+        }
+
+        catch (Exception ex) {
+            return null;
+        }
+
+    }
+
+}
